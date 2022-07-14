@@ -1,9 +1,13 @@
 package com.example.sendtoken.controller;
 
 import com.example.sendtoken.entity.Message;
+import com.example.sendtoken.entity.Person;
 import com.example.sendtoken.repository.MessageRepository;
 import com.example.sendtoken.repository.PersonRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.json.JSONObject;
+import org.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -72,26 +76,26 @@ public class MessageControllerTest {
 
     @Test
     public void whenPostMessageValidTokenValidNameSuccess() throws Exception {
+        Person person = Person.builder().name("ivan").password("12345").build();
         Integer CountMessagesBefore = messageRepository.findAll().size();
 
         //get token
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/confirmGetToken")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("name", "ivan")
-                        .param("password", "12345")
+                        .content(new ObjectMapper().writeValueAsString(person))
                         .with(csrf()))
                 .andReturn();
 
         JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
         String token = jsonToken.getString("token");
 
+        Message message = Message.builder().name("ivan").message("message").build();
         // when
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/api/message")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("name", "ivan")
-                        .param("message", "12345")
+                        .content(new ObjectMapper().writeValueAsString(message))
                         .header("Bearer_token", token)
                         .with(csrf()))
                 .andDo(print())
@@ -103,90 +107,94 @@ public class MessageControllerTest {
 
     }
 
-//    @Test
-//    public void whenGetTenMessageValidTokenValidUserSuccess() throws Exception {
-//
-//        //get token
-//        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/api/confirmGetToken")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .param("name", "ivan")
-//                        .param("password", "12345")
-//                        .with(csrf()))
-//                .andReturn();
-//
-//        JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
-//        String token = jsonToken.getString("token");
-//
-//        // when
-//        final MvcResult resultMessage =mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/api/message")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .param("name", "ivan")
-//                        .param("message", "history 10")
-//                        .header("Bearer_token", token)
-//                        .with(csrf()))
-//                .andReturn();
-//                // then
-//        JSONArray jsonMessage = new JSONArray(resultMessage.getResponse().getContentAsString());
-//        assertEquals(10, jsonMessage.length());
-//
-//    }
-//
-//    @Test
-//    public void whenPostMessageValidTokenWrongUser() throws Exception {
-//
-//        //get token
-//        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/api/confirmGetToken")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .param("name", "ivan")
-//                        .param("password", "12345")
-//                        .with(csrf()))
-//                .andReturn();
-//
-//        JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
-//        String token = jsonToken.getString("token");
-//
-//        // when
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/api/message")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .param("name", "wwwwwww")
-//                        .param("message", "history 10")
-//                        .header("Bearer_token", token)
-//                        .with(csrf()))
-//                .andDo(print())
-//                // then
-//                .andExpect(status().is4xxClientError());
-//
-//    }
-//    @Test
-//    public void whenPostEmptyMessageValidTokenValidUser() throws Exception {
-//
-//        //get token
-//        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/api/confirmGetToken")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .param("name", "ivan")
-//                        .param("password", "12345")
-//                        .with(csrf()))
-//                .andReturn();
-//
-//        JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
-//        String token = jsonToken.getString("token");
-//
-//        // when
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .post("/api/message")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .param("name", "ivan")
-//                        .param("message", "  ")
-//                        .header("Bearer_token", token)
-//                        .with(csrf()))
-//                .andDo(print())
-//                // then
-//                .andExpect(status().is4xxClientError());
-//
-//    }
+    @Test
+    public void whenGetTenMessageValidTokenValidUserSuccess() throws Exception {
+
+        Person person = Person.builder().name("ivan").password("12345").build();
+
+        //get token
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/confirmGetToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(person))
+                        .with(csrf()))
+                .andReturn();
+
+        JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
+        String token = jsonToken.getString("token");
+
+        Message message = Message.builder().name("ivan").message("history 10").build();
+        // when
+        final MvcResult resultMessage =mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/message")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(message))
+                        .header("Bearer_token", token)
+                        .with(csrf()))
+                .andReturn();
+                // then
+        JSONArray jsonMessage = new JSONArray(resultMessage.getResponse().getContentAsString());
+        assertEquals(10, jsonMessage.length());
+
+    }
+
+    @Test
+    public void whenPostMessageValidTokenWrongUser() throws Exception {
+
+        Person person = Person.builder().name("ivan").password("12345").build();
+
+        //get token
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/confirmGetToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(person))
+                        .with(csrf()))
+                .andReturn();
+
+        JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
+        String token = jsonToken.getString("token");
+
+        Message message = Message.builder().name("qqqqqqqq").message("history 10").build();
+        // when
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/message")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(message))
+                        .header("Bearer_token", token)
+                        .with(csrf()))
+                .andDo(print())
+                // then
+                .andExpect(status().is4xxClientError());
+
+    }
+    @Test
+    public void whenPostEmptyMessageValidTokenValidUser() throws Exception {
+
+        Person person = Person.builder().name("ivan").password("12345").build();
+
+        //get token
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/confirmGetToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(person))
+                        .with(csrf()))
+                .andReturn();
+
+        JSONObject jsonToken = new JSONObject(result.getResponse().getContentAsString());
+        String token = jsonToken.getString("token");
+
+        Message message = Message.builder().name("ivan").message("       ").build();
+
+        // when
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/api/message")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(message))
+                        .header("Bearer_token", token)
+                        .with(csrf()))
+                .andDo(print())
+                // then
+                .andExpect(status().is4xxClientError());
+
+    }
 }

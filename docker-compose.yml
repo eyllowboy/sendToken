@@ -16,5 +16,5 @@ services:
     build: ./
     container_name: java_app
     ports:
-      - 8080:8080
+      - 9120:9120
 
