@@ -1,0 +1,28 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-message
+      author: siarhei
+      dbms: 'postgresql'
+      changes:
+        - createTable:
+            tableName: message
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: message
+                  type: varchar(50)
+              - column:
+                  name: name
+                  type: varchar(50)
+              - column:
+                  name: person_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_person_id
+                    references: person(id)

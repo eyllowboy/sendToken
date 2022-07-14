@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/changeset/create-person-table.yaml
+  - include:
+      file: classpath:/db/changelog/changeset/fill_person.sql
+  - include:
+      file: classpath:/db/changelog/changeset/create-message-table.yaml
+  - include:
+      file: classpath:/db/changelog/changeset/fill_message.sql
