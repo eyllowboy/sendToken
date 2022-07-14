@@ -1,6 +1,5 @@
 package com.example.sendtoken.controller;
 
-import com.example.sendtoken.dto.PersonDTO;
 import com.example.sendtoken.entity.Person;
 import com.example.sendtoken.exeption.BadRequestExeption;
 import com.example.sendtoken.repository.PersonRepository;
@@ -8,10 +7,7 @@ import com.example.sendtoken.util.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Base64;
 import java.util.Map;
