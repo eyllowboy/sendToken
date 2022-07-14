@@ -13,9 +13,9 @@
 так же в базу записаны 20 сообщений привязанных к пользователю ivan:  message: message1-message20   name:ivan
 
 
-API http://localhost:9120/api/message
-Принимает JSON: {"name": "......", "message": "......."}
-При отправке JSON: {"name": "ivan", "message": "12345"}
+API http://localhost:9120/api/confirmGetToken
+Принимает JSON: {"name": "......", "password": "......."}
+При отправке JSON: {"name": "ivan", "password": "12345"}
 Выдает JSON: {"token": "........."}
 Пользователь ищется в базе а так же сравнивается пароль, при несоответствии возвращает: "status": 400,"error": "Bad Request"
 При пустых name или message возвращает: "status": 400,"error": "Bad Request"
