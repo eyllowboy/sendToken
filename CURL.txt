@@ -1,0 +1,11 @@
+
+
+Получение токена
+curl -d '{"name": "ivan", "password": "12345"}' -H "Content-Type: application/json" -X POST http://localhost:9120/api/confirmGetToken
+
+
+Получение 10 последних сообщений
+curl -d '{"name": "ivan", "message": "history 10"}' -H "Content-Type: application/json" -H "Bearer_token: ТОКЕН" -X POST http://localhost:9120/api/message
+
+Отправка и сохранение сообщения
+curl -d '{"name": "ivan", "message": "history"}' -H "Content-Type: application/json" -H "Bearer_token: ТОКЕН" -X POST http://localhost:9120/api/message
